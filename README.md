@@ -1,6 +1,6 @@
 
 ```
-bash -c "$(wget -qLO - https://github.com/minlearnminlearn/ProxmoxVE_fixed/raw/master/inst.sh gitea)"
+bash -c "$(wget -qLO - https://github.com/minlearnminlearn/ProxmoxVE_fixed/raw/master/inst.sh|bash -s - gitea)"
 ```
 
 <div align="center">
