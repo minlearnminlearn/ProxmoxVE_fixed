@@ -30,6 +30,18 @@ color() {
   HOLD=" "
 }
 
+# This function enables IPv6 if it's not disabled and sets verbose mode if the global variable is set to "yes"
+verb_ip6() {
+  if [ "$VERBOSE" = "yes" ]; then
+    STD=""
+  else STD="silent"; fi
+  silent() { "$@" >/dev/null 2>&1; }
+  if [ "$DISABLEIPV6" == "yes" ]; then
+    echo "net.ipv6.conf.all.disable_ipv6 = 1" >>/etc/sysctl.conf
+    $STD sysctl -p
+  fi
+}
+
 # This function enables error handling in the script by setting options and defining a trap for the ERR signal.
 catch_errors() {
   set -Eeuo pipefail
