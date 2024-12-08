@@ -1,3 +1,8 @@
+
+```
+bash -c "$(wget -qLO - https://github.com/minlearnminlearn/ProxmoxVE_fixed/raw/main/inst.sh gitea)"
+```
+
 <div align="center">
   <p align="center">
     <a href="#">
