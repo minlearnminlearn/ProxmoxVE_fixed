@@ -1050,7 +1050,13 @@ http://dl-cdn.alpinelinux.org/alpine/latest-stable/community
 EOF'
     pct exec "$CTID" -- ash -c "apk add bash >/dev/null"
   fi
+
+  setting_up_container
+  network_check
+  update_os
   lxc-attach -n "$CTID" -- bash -c "$(wget -qLO - https://raw.githubusercontent.com/minlearnminlearn/ProxmoxVE_fixed/main/$var/$var_install.sh)" || exit
+  motd_ssh
+  customize
 }
 
 

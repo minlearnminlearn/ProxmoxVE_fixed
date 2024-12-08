@@ -2,22 +2,16 @@
 
 ###############################
 
-#gitea-install.sh
-source /dev/stdin <<< "$FUNCTIONS_FILE_PATH"
-color
-verb_ip6
-catch_errors
-setting_up_container
-network_check
-update_os
 
-msg_info "Installing Dependencies"
-$STD apt-get install -y git
-$STD apt-get install -y curl
-$STD apt-get install -y sudo
-$STD apt-get install -y mc
-$STD apt-get install -y sqlite3
-msg_ok "Installed Dependencies"
+#verb_ip6
+
+echo "Installing Dependencies"
+ apt-get install -y git
+ apt-get install -y curl
+ apt-get install -y sudo
+ apt-get install -y mc
+ apt-get install -y sqlite3
+echo "Installed Dependencies"
 
 msg_info "Installing Gitea"
 RELEASE=$(wget -q https://github.com/go-gitea/gitea/releases/latest -O - | grep "title>Release" | cut -d " " -f 4 | sed 's/^v//')
@@ -31,9 +25,9 @@ chmod -R 750 /var/lib/gitea/
 chown root:gitea /etc/gitea
 chmod 770 /etc/gitea
 sudo -u gitea ln -s /var/lib/gitea/data/.ssh/ /etc/gitea/.ssh
-msg_ok "Installed Gitea"
+echo "Installed Gitea"
 
-msg_info "Creating Service"
+echo "Creating Service"
 cat <<EOF >/etc/systemd/system/gitea.service
 [Unit]
 Description=Gitea (Git with a cup of tea)
@@ -65,15 +59,13 @@ Environment=USER=gitea HOME=/var/lib/gitea/data GITEA_WORK_DIR=/var/lib/gitea
 WantedBy=multi-user.target
 EOF
 systemctl enable -q --now gitea
-msg_ok "Created Service"
+echo "Created Service"
 
-motd_ssh
-customize
 
-msg_info "Cleaning up"
-$STD apt-get -y autoremove
-$STD apt-get -y autoclean
-msg_ok "Cleaned"
+echo "Cleaning up"
+ apt-get -y autoremove
+ apt-get -y autoclean
+echo "Cleaned"
 
 ###############################
 
