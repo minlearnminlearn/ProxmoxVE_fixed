@@ -1021,7 +1021,7 @@ header_info
 check_container_storage
 check_container_resources
 
-bash -c "$(wget -qLO - https://raw.githubusercontent.com/minlearnminlearn/ProxmoxVE_fixed/main/${var}/${var}_update.sh)" || exit
+bash -c "$(wget -qLO - https://raw.githubusercontent.com/minlearnminlearn/ProxmoxVE_fixed/main/${APP}/${APP}_update.sh)" || exit
 
 exit
 }
@@ -1074,7 +1074,7 @@ EOF'
   setting_up_container
   network_check
   update_os
-  lxc-attach -n "$CTID" -- bash -c "$(wget -qLO - https://raw.githubusercontent.com/minlearnminlearn/ProxmoxVE_fixed/main/${var}/${var}_install.sh)" || exit
+  lxc-attach -n "$CTID" -- bash -c "$(wget -qLO - https://raw.githubusercontent.com/minlearnminlearn/ProxmoxVE_fixed/main/${APP}/${APP}_install.sh)" || exit
   motd_ssh
   customize
 }
