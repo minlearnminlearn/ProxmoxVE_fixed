@@ -20,6 +20,10 @@ color() {
   GN=$(echo "\033[1;92m")
   DGN=$(echo "\033[32m")
   CL=$(echo "\033[m")
+
+  RETRY_NUM=10
+  RETRY_EVERY=3
+
   CM="${GN}✓${CL}"
   CROSS="${RD}✗${CL}"
   BFR="\\r\\033[K"
