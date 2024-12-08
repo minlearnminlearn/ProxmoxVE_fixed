@@ -3,8 +3,6 @@
 ###############################
 
 
-#verb_ip6
-
 echo "Installing Dependencies"
  apt-get install -y git
  apt-get install -y curl

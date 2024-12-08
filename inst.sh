@@ -30,17 +30,6 @@ color() {
   HOLD=" "
 }
 
-# This function enables IPv6 if it's not disabled and sets verbose mode if the global variable is set to "yes"
-verb_ip6() {
-  if [ "$VERBOSE" = "yes" ]; then
-    STD=""
-  else STD="silent"; fi
-  silent() { "$@" >/dev/null 2>&1; }
-  if [ "$DISABLEIPV6" == "yes" ]; then
-    echo "net.ipv6.conf.all.disable_ipv6 = 1" >>/etc/sysctl.conf
-    $STD sysctl -p
-  fi
-}
 
 # This function enables error handling in the script by setting options and defining a trap for the ERR signal.
 catch_errors() {
@@ -769,6 +758,19 @@ EOF
 ########################
 
 # install.func.sh
+
+# This function enables IPv6 if it's not disabled and sets verbose mode if the global variable is set to "yes"
+verb_ip6() {
+  if [ "$VERBOSE" = "yes" ]; then
+    STD=""
+  else STD="silent"; fi
+  silent() { "$@" >/dev/null 2>&1; }
+  if [ "$DISABLEIPV6" == "yes" ]; then
+    echo "net.ipv6.conf.all.disable_ipv6 = 1" >>/etc/sysctl.conf
+    $STD sysctl -p
+  fi
+}
+
 # This function sets up the Container OS by generating the locale, setting the timezone, and checking the network connection
 setting_up_container() {
   msg_info "Setting up Container OS"
@@ -1068,6 +1070,7 @@ EOF'
     pct exec "$CTID" -- ash -c "apk add bash >/dev/null"
   fi
 
+  verb_ip6
   setting_up_container
   network_check
   update_os
