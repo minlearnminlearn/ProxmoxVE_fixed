@@ -1034,7 +1034,8 @@ start() {
 start
 
 
-CTID=`build_container`
+build_container
+
 [[ ! -z "$CTID" ]] && {
   # This starts the container and executes <app>-install.sh
   msg_info "Starting LXC Container"
