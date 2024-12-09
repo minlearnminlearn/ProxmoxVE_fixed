@@ -773,7 +773,7 @@ verb_ip6() {
 
 # This function sets up the Container OS by generating the locale, setting the timezone, and checking the network connection
 IFS='' read -r -d '' setting_up_container <<"EOF"
-  msg_info "Setting up Container OS"
+  echo "Setting up Container OS"
   sed -i "/$LANG/ s/\(^# \)//" /etc/locale.gen
   locale_line=$(grep -v '^#' /etc/locale.gen | grep -E '^[a-zA-Z]' | awk '{print $1}' | head -n 1)
   echo "LANG=${locale_line}" >/etc/default/locale
@@ -795,8 +795,8 @@ IFS='' read -r -d '' setting_up_container <<"EOF"
   fi
   rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
   systemctl disable -q --now systemd-networkd-wait-online.service
-  msg_ok "Set up Container OS"
-  msg_ok "Network Connected: ${BL}$(hostname -I)"
+  echo "Set up Container OS"
+  echo "Network Connected: ${BL}$(hostname -I)"
 EOF
 
 # This function checks the network connection by pinging a known IP address and prompts the user to continue if the internet is not connected
@@ -808,18 +808,18 @@ IFS='' read -r -d '' network_check <<"EOF"
   sleep 1
 # Check IPv4 connectivity
   if ping -c 1 -W 1 1.1.1.1 &>/dev/null; then 
-    msg_ok "IPv4 Internet Connected";
+    echo "IPv4 Internet Connected";
     ipv4_connected=true
   else
-    msg_error "IPv4 Internet Not Connected";
+    echo "IPv4 Internet Not Connected";
   fi
 
 # Check IPv6 connectivity
   if ping6 -c 1 -W 1 2606:4700:4700::1111 &>/dev/null; then
-    msg_ok "IPv6 Internet Connected";
+    echo "IPv6 Internet Connected";
     ipv6_connected=true
   else
-    msg_error "IPv6 Internet Not Connected";
+    echo "IPv6 Internet Not Connected";
   fi
 
 # If both IPv4 and IPv6 checks fail, prompt the user
@@ -841,7 +841,7 @@ EOF
 
 # This function updates the Container OS by running apt-get update and upgrade
 IFS='' read -r -d '' update_os <<"EOF"
-  msg_info "Updating Container OS"
+  echo "Updating Container OS"
   if [[ "$CACHER" == "yes" ]]; then
     echo "Acquire::http::Proxy-Auto-Detect \"/usr/local/bin/apt-proxy-detect.sh\";" >/etc/apt/apt.conf.d/00aptproxy
     cat <<EOF >/usr/local/bin/apt-proxy-detect.sh
@@ -857,7 +857,7 @@ EOF
    apt-get update
    apt-get -o Dpkg::Options::="--force-confold" -y dist-upgrade
   rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
-  msg_ok "Updated Container OS"
+  echo "Updated Container OS"
 EOF
 
 # This function modifies the message of the day (motd) and SSH settings
@@ -884,7 +884,7 @@ IFS='' read -r -d '' customize <<"EOF"
 EOF
     systemctl daemon-reload
     systemctl restart $(basename $(dirname $GETTY_OVERRIDE) | sed 's/\.d//')
-    msg_ok "Customized Container"
+    echo "Customized Container"
   fi
   echo "bash -c \"\$(wget -qLO - https://github.com/minlearnminlearn/ProxmoxVE_fixed/raw/main/${app}.sh)\"" >/usr/bin/update
   chmod +x /usr/bin/update
