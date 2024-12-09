@@ -1,3 +1,8 @@
+
+```
+wget -qO - https://github.com/minlearnminlearn/ProxmoxVE_fixed/raw/master/inst.sh|bash -s - gitea
+```
+
 <div align="center">
   <p align="center">
     <a href="#">
