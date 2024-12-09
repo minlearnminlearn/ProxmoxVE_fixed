@@ -1037,7 +1037,7 @@ EOF'
   lxc-attach -n "$CTID" -- bash -c "$setting_up_container" || exit
   lxc-attach -n "$CTID" -- bash -c "$network_check" || exit
   lxc-attach -n "$CTID" -- bash -c "$update_os" || exit
-  lxc-attach -n "$CTID" -- bash -c "$(wget -qLO - https://raw.githubusercontent.com/minlearnminlearn/ProxmoxVE_fixed/main/${APP}/${APP}_install.sh)" || exit
+  lxc-attach -n "$CTID" -- bash -c "$(wget -qLO - https://raw.githubusercontent.com/minlearnminlearn/ProxmoxVE_fixed/master/${APP}/${APP}_install.sh)" || exit
   lxc-attach -n "$CTID" -- bash -c "$motd_ssh" || exit
   lxc-attach -n "$CTID" -- bash -c "$customize" || exit
 
@@ -1050,7 +1050,7 @@ header_info
 check_container_storage
 check_container_resources
 
-bash -c "$(wget -qLO - https://raw.githubusercontent.com/minlearnminlearn/ProxmoxVE_fixed/main/${APP}/${APP}_update.sh)" || exit
+bash -c "$(wget -qLO - https://raw.githubusercontent.com/minlearnminlearn/ProxmoxVE_fixed/master/${APP}/${APP}_update.sh)" || exit
 
 exit
 }
