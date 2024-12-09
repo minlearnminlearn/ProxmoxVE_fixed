@@ -772,7 +772,7 @@ verb_ip6() {
 }
 
 # This function sets up the Container OS by generating the locale, setting the timezone, and checking the network connection
-setting_up_container() {
+IFS='' read -r -d '' setting_up_container <<"EOF"
   msg_info "Setting up Container OS"
   sed -i "/$LANG/ s/\(^# \)//" /etc/locale.gen
   locale_line=$(grep -v '^#' /etc/locale.gen | grep -E '^[a-zA-Z]' | awk '{print $1}' | head -n 1)
@@ -797,10 +797,10 @@ setting_up_container() {
   systemctl disable -q --now systemd-networkd-wait-online.service
   msg_ok "Set up Container OS"
   msg_ok "Network Connected: ${BL}$(hostname -I)"
-}
+EOF
 
 # This function checks the network connection by pinging a known IP address and prompts the user to continue if the internet is not connected
-network_check() {
+IFS='' read -r -d '' network_check <<"EOF"
   set +e
   trap - ERR
   ipv4_connected=false
@@ -837,10 +837,10 @@ network_check() {
   if [[ -z "$RESOLVEDIP" ]]; then msg_error "DNS Lookup Failure"; else msg_ok "DNS Resolved github.com to ${BL}$RESOLVEDIP${CL}"; fi
   set -e
   trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
-}
+EOF
 
 # This function updates the Container OS by running apt-get update and upgrade
-update_os() {
+IFS='' read -r -d '' update_os <<"EOF"
   msg_info "Updating Container OS"
   if [[ "$CACHER" == "yes" ]]; then
     echo "Acquire::http::Proxy-Auto-Detect \"/usr/local/bin/apt-proxy-detect.sh\";" >/etc/apt/apt.conf.d/00aptproxy
@@ -858,10 +858,10 @@ EOF
    apt-get -o Dpkg::Options::="--force-confold" -y dist-upgrade
   rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
   msg_ok "Updated Container OS"
-}
+EOF
 
 # This function modifies the message of the day (motd) and SSH settings
-motd_ssh() {
+IFS='' read -r -d '' motd_ssh <<"EOF"
   echo "export TERM='xterm-256color'" >>/root/.bashrc
   echo -e "$APPLICATION LXC provided by https://helper-scripts.com/\n" >/etc/motd
   chmod -x /etc/update-motd.d/*
@@ -869,10 +869,10 @@ motd_ssh() {
     sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
     systemctl restart sshd
   fi
-}
+EOF
 
 # This function customizes the container by modifying the getty service and enabling auto-login for the root user
-customize() {
+IFS='' read -r -d '' customize <<"EOF"
   if [[ "$PASSWORD" == "" ]]; then
     msg_info "Customizing Container"
     GETTY_OVERRIDE="/etc/systemd/system/container-getty@1.service.d/override.conf"
@@ -888,7 +888,7 @@ EOF
   fi
   echo "bash -c \"\$(wget -qLO - https://github.com/minlearnminlearn/ProxmoxVE_fixed/raw/main/${app}.sh)\"" >/usr/bin/update
   chmod +x /usr/bin/update
-}
+EOF
 
 ########################
 
@@ -1034,7 +1034,12 @@ EOF'
   fi
 
   #verb_ip6
-  lxc-attach -n "$CTID" -- bash -c "$(  setting_up_container;network_check;update_os;wget -qLO - https://raw.githubusercontent.com/minlearnminlearn/ProxmoxVE_fixed/main/${APP}/${APP}_install.sh;  motd_ssh;customize)" || exit
+  lxc-attach -n "$CTID" -- bash -c "$setting_up_container" || exit
+  lxc-attach -n "$CTID" -- bash -c "$network_check" || exit
+  lxc-attach -n "$CTID" -- bash -c "$update_os" || exit
+  #lxc-attach -n "$CTID" -- bash -c "$(wget -qLO - https://raw.githubusercontent.com/minlearnminlearn/ProxmoxVE_fixed/main/${APP}/${APP}_install.sh)" || exit
+  lxc-attach -n "$CTID" -- bash -c "$motd_ssh" || exit
+  lxc-attach -n "$CTID" -- bash -c "$customize" || exit
 
   }
 
