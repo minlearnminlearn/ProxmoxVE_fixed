@@ -1034,12 +1034,8 @@ EOF'
   fi
 
   #verb_ip6
-  setting_up_container
-  network_check
-  update_os
-  lxc-attach -n "$CTID" -- bash -c "$(wget -qLO - https://raw.githubusercontent.com/minlearnminlearn/ProxmoxVE_fixed/main/${APP}/${APP}_install.sh)" || exit
-  motd_ssh
-  customize
+  lxc-attach -n "$CTID" -- bash -c "$(  setting_up_container;network_check;update_os;wget -qLO - https://raw.githubusercontent.com/minlearnminlearn/ProxmoxVE_fixed/main/${APP}/${APP}_install.sh;  motd_ssh;customize)" || exit
+
   }
 
 }
