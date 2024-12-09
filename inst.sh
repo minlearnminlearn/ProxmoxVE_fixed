@@ -874,7 +874,7 @@ EOFF
 # This function customizes the container by modifying the getty service and enabling auto-login for the root user
 IFS='' read -r -d '' customize <<"EOFF"
   if [[ "$PASSWORD" == "" ]]; then
-    msg_info "Customizing Container"
+    echo "Customizing Container"
     GETTY_OVERRIDE="/etc/systemd/system/container-getty@1.service.d/override.conf"
     mkdir -p $(dirname $GETTY_OVERRIDE)
     cat <<EOF >$GETTY_OVERRIDE
