@@ -854,8 +854,8 @@ fi
 EOF
   chmod +x /usr/local/bin/apt-proxy-detect.sh
   fi
-  $STD apt-get update
-  $STD apt-get -o Dpkg::Options::="--force-confold" -y dist-upgrade
+   apt-get update
+   apt-get -o Dpkg::Options::="--force-confold" -y dist-upgrade
   rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
   msg_ok "Updated Container OS"
 }
@@ -1033,7 +1033,7 @@ EOF'
     pct exec "$CTID" -- ash -c "apk add bash >/dev/null"
   fi
 
-  verb_ip6
+  #verb_ip6
   setting_up_container
   network_check
   update_os
