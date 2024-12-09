@@ -1014,47 +1014,10 @@ install_script() {
     echo -e "${RD}Using Advanced Settings${CL}"
     advanced_settings
   fi
-}
 
-function update_script() {
-header_info
-check_container_storage
-check_container_resources
+  build_container
 
-bash -c "$(wget -qLO - https://raw.githubusercontent.com/minlearnminlearn/ProxmoxVE_fixed/main/${APP}/${APP}_update.sh)" || exit
-
-exit
-}
-
-
-start() {
-  if command -v pveversion >/dev/null 2>&1; then
-    if ! (whiptail --backtitle "Proxmox VE Helper Scripts" --title "${APP} LXC" --yesno "This will create a New ${APP} LXC. Proceed?" 10 58); then
-      clear
-      echo -e "⚠  User exited script \n"
-      exit
-    fi
-    SPINNER_PID=""
-    install_script
-  fi
-
-  if ! command -v pveversion >/dev/null 2>&1; then
-    if ! (whiptail --backtitle "Proxmox VE Helper Scripts" --title "${APP} LXC UPDATE" --yesno "Support/Update functions for ${APP} LXC.  Proceed?" 10 58); then
-      clear
-      echo -e "⚠  User exited script \n"
-      exit
-    fi
-    SPINNER_PID=""
-    update_script
-  fi
-}
-
-start
-
-
-build_container
-
-[[ ! -z "$CTID" ]] && {
+  [[ ! -z "$CTID" ]] && {
   # This starts the container and executes <app>-install.sh
   msg_info "Starting LXC Container"
   pct start "$CTID"
@@ -1077,7 +1040,45 @@ EOF'
   lxc-attach -n "$CTID" -- bash -c "$(wget -qLO - https://raw.githubusercontent.com/minlearnminlearn/ProxmoxVE_fixed/main/${APP}/${APP}_install.sh)" || exit
   motd_ssh
   customize
+  }
+
 }
+
+function update_script() {
+header_info
+check_container_storage
+check_container_resources
+
+bash -c "$(wget -qLO - https://raw.githubusercontent.com/minlearnminlearn/ProxmoxVE_fixed/main/${APP}/${APP}_update.sh)" || exit
+
+exit
+}
+
+
+
+  if command -v pveversion >/dev/null 2>&1; then
+    if ! (whiptail --backtitle "Proxmox VE Helper Scripts" --title "${APP} LXC" --yesno "This will create a New ${APP} LXC. Proceed?" 10 58); then
+      clear
+      echo -e "⚠  User exited script \n"
+      exit
+    fi
+    SPINNER_PID=""
+    install_script
+  fi
+
+  if ! command -v pveversion >/dev/null 2>&1; then
+    if ! (whiptail --backtitle "Proxmox VE Helper Scripts" --title "${APP} LXC UPDATE" --yesno "Support/Update functions for ${APP} LXC.  Proceed?" 10 58); then
+      clear
+      echo -e "⚠  User exited script \n"
+      exit
+    fi
+    SPINNER_PID=""
+    update_script
+  fi
+
+
+
+
 
 
 description
