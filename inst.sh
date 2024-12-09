@@ -834,7 +834,7 @@ IFS='' read -r -d '' network_check <<"EOFF"
   fi
 
   RESOLVEDIP=$(getent hosts github.com | awk '{ print $1 }')
-  if [[ -z "$RESOLVEDIP" ]]; then msg_error "DNS Lookup Failure"; else msg_ok "DNS Resolved github.com to ${BL}$RESOLVEDIP${CL}"; fi
+  if [[ -z "$RESOLVEDIP" ]]; then echo "DNS Lookup Failure"; else echo "DNS Resolved github.com to ${BL}$RESOLVEDIP${CL}"; fi
   set -e
   trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
 EOFF
