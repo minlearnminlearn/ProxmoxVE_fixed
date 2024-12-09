@@ -772,7 +772,7 @@ verb_ip6() {
 }
 
 # This function sets up the Container OS by generating the locale, setting the timezone, and checking the network connection
-IFS='' read -r -d '' setting_up_container <<"EOF"
+IFS='' read -r -d '' setting_up_container <<"EOFF"
   echo "Setting up Container OS"
   sed -i "/$LANG/ s/\(^# \)//" /etc/locale.gen
   locale_line=$(grep -v '^#' /etc/locale.gen | grep -E '^[a-zA-Z]' | awk '{print $1}' | head -n 1)
@@ -797,10 +797,10 @@ IFS='' read -r -d '' setting_up_container <<"EOF"
   systemctl disable -q --now systemd-networkd-wait-online.service
   echo "Set up Container OS"
   echo "Network Connected: ${BL}$(hostname -I)"
-EOF
+EOFF
 
 # This function checks the network connection by pinging a known IP address and prompts the user to continue if the internet is not connected
-IFS='' read -r -d '' network_check <<"EOF"
+IFS='' read -r -d '' network_check <<"EOFF"
   set +e
   trap - ERR
   ipv4_connected=false
@@ -837,10 +837,10 @@ IFS='' read -r -d '' network_check <<"EOF"
   if [[ -z "$RESOLVEDIP" ]]; then msg_error "DNS Lookup Failure"; else msg_ok "DNS Resolved github.com to ${BL}$RESOLVEDIP${CL}"; fi
   set -e
   trap 'error_handler $LINENO "$BASH_COMMAND"' ERR
-EOF
+EOFF
 
 # This function updates the Container OS by running apt-get update and upgrade
-IFS='' read -r -d '' update_os <<"EOF"
+IFS='' read -r -d '' update_os <<"EOFF"
   echo "Updating Container OS"
   if [[ "$CACHER" == "yes" ]]; then
     echo "Acquire::http::Proxy-Auto-Detect \"/usr/local/bin/apt-proxy-detect.sh\";" >/etc/apt/apt.conf.d/00aptproxy
@@ -858,10 +858,10 @@ EOF
    apt-get -o Dpkg::Options::="--force-confold" -y dist-upgrade
   rm -rf /usr/lib/python3.*/EXTERNALLY-MANAGED
   echo "Updated Container OS"
-EOF
+EOFF
 
 # This function modifies the message of the day (motd) and SSH settings
-IFS='' read -r -d '' motd_ssh <<"EOF"
+IFS='' read -r -d '' motd_ssh <<"EOFF"
   echo "export TERM='xterm-256color'" >>/root/.bashrc
   echo -e "$APPLICATION LXC provided by https://helper-scripts.com/\n" >/etc/motd
   chmod -x /etc/update-motd.d/*
@@ -869,10 +869,10 @@ IFS='' read -r -d '' motd_ssh <<"EOF"
     sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
     systemctl restart sshd
   fi
-EOF
+EOFF
 
 # This function customizes the container by modifying the getty service and enabling auto-login for the root user
-IFS='' read -r -d '' customize <<"EOF"
+IFS='' read -r -d '' customize <<"EOFF"
   if [[ "$PASSWORD" == "" ]]; then
     msg_info "Customizing Container"
     GETTY_OVERRIDE="/etc/systemd/system/container-getty@1.service.d/override.conf"
@@ -888,7 +888,7 @@ EOF
   fi
   echo "bash -c \"\$(wget -qLO - https://github.com/minlearnminlearn/ProxmoxVE_fixed/raw/main/${app}.sh)\"" >/usr/bin/update
   chmod +x /usr/bin/update
-EOF
+EOFF
 
 ########################
 
